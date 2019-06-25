@@ -1,1 +1,106 @@
 
+<!-- -->
+<ion-header>
+  <ion-navbar color="primary">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>    
+    <ion-title class="srm-title">
+      <strong>SRM</strong> PUBLIC SCHOOL
+    </ion-title>    
+    <ion-buttons end>
+      <button ion-button tappable class="my-button" (click)="goToMessage()">
+        <ion-icon name="mail"></ion-icon>
+      </button>
+      <button ion-button tappable class="my-button" (click)="presentNotifications($event)">
+          <ion-icon name="notifications"></ion-icon>
+          <ion-badge id="notifications-badge" color="danger">{{items}}</ion-badge>
+        </button>
+      <button ion-button tappable class="my-button" (click)="goToAccount()">
+        <ion-icon name="person"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="animated fadeIn common-bg"> 
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh"
+          refreshingSpinner="dots"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
+  <div style="display: block">
+    <canvas baseChart
+            [colors]="chartColors"
+            [datasets]="barChartData"
+            [labels]="barChartLabels"
+            [options]="barChartOptions"
+            [legend]="barChartLegend"
+            [chartType]="barChartType"
+            (chartHover)="chartHovered($event)"
+            (chartClick)="chartClicked($event)"></canvas>
+  </div> 
+  
+  <ion-grid  (click)="moveFee()">  
+  <img src='assets/img/atm.svg' class="dash-icon" />    
+  <div class="fee-design">
+          
+          <ion-list> 
+              <ion-item class="font-fee-title">Total Due
+                <p class="font-fee-content" item-end>{{feedetails.dueamount | currency:"INR":true:"1.2"}}</p>
+              </ion-item>
+              <ion-item class="font-fee-title">Due Date
+                <p class="font-fee-content" *ngIf="feedetails.status == 1" item-end>{{enable.date_from_stu | date}} - {{enable.date_to_stu | date}}</p>
+                <p class="font-fee-content" *ngIf="feedetails.status == 0" item-end> - </p>
+              </ion-item>
+         </ion-list>      
+       
+        </div>
+    </ion-grid>
+    
+      
+      <ion-grid *ngIf="driverdata.status == 1" class="transport-design" (click)="moveTransport()">          
+          <!-- </ion-title> -->
+          <img src='assets/img/bus.svg' class="dash-icon" />
+          <div class="transport-design">            
+            <ion-list>                
+                    <ion-item class="transport-bg-clr"> Route            
+                      <p item-end><span>{{driverdata.route}}</span></p>
+                    </ion-item>       
+                    <ion-item class="transport-bg-clr">
+                      <ion-row>
+                        <ion-col col-6 ><i><ion-icon name="help-buoy"></ion-icon></i> {{driverdata.dname}}</ion-col>        
+                        <ion-col col-6 style="text-align: right !important;"><i><ion-icon name="call"></ion-icon></i> {{driverdata.mobile}}</ion-col>
+                      </ion-row>
+                    </ion-item>                 
+            </ion-list> 
+          </div>
+        </ion-grid>
+
+
+    <ion-grid>      
+        <ion-row *ngIf="showEventList" >      
+            <ion-col *ngIf = "calDate?.length > 0">
+              <ion-list tappable *ngFor="let item of eventList" >
+                <ion-item class="event-pop" >
+                 <p>{{item.leave_date | date }} : {{item.name}} </p>
+                </ion-item>
+              </ion-list>
+            </ion-col>
+          </ion-row>
+        <ion-row>
+            <ion-col>
+              <ion-calendar  lang="en" class="space-remove" 
+              [options]="optionsMulti"
+              (onChange)="onChange($event)"
+              [type]="type"
+              [format]="'DD-MM-YYYY'">
+            </ion-calendar>
+            </ion-col>
+          </ion-row> 
+    </ion-grid>  
+  </ion-content>
+
